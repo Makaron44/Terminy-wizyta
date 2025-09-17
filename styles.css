@@ -56,3 +56,8 @@ select.inp{ padding-right:36px; }
 .muted{color:var(--muted)} .empty{padding:20px;color:var(--muted);text-align:center} .sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
 .toast{ position:fixed; right:16px; bottom:16px; background:var(--panel); border:1px solid var(--border); padding:10px 12px; border-radius:10px; box-shadow:var(--shadow); opacity:0; transform:translateY(8px); transition:.25s; z-index:20; }
 .toast.show{opacity:1; transform:none}
+/* Dynamic Island fix */
+body{ padding-top: 0 !important; }
+.app-header{ padding-top: calc(16px + var(--safe-top)) !important; }
+
+
