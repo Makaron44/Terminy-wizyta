@@ -1,4 +1,4 @@
-const CACHE = 'dt-v3';
+const CACHE = 'dt-v5';
 const ASSETS = [
   './','index.html','styles.css','app.js','manifest.webmanifest',
   'icons/icon-192-bright.png','icons/icon-512-bright.png','icons/maskable-512-bright.png'
