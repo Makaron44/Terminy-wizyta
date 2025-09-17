@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Domowe terminy</title>
+  <meta name="description" content="Przypominacz o ważnych datach i wizytach z eksportem do .ics. Działa offline." />
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0b0c10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-180-bright.png">
+  <link rel="stylesheet" href="styles.css" />
+  <script> if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); } </script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Domowe terminy</h1>
+    <p class="sub">Rachunki, lekarz, weterynarz — wszystko w jednym miejscu.</p>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <form id="form" class="form">
+        <label class="field"><span>Nazwa</span><input id="title" class="inp" placeholder="Np. Wizyta u lekarza" required /></label>
+        <div class="grid-2">
+          <label class="field"><span>Data</span><input id="date" type="date" class="inp" required /></label>
+          <label class="field"><span>Kategoria</span>
+            <select id="category" class="inp">
+              <option>Rachunki</option><option>Auto</option><option>Zdrowie</option>
+              <option>Dom</option><option>Praca</option><option>Inne</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid-3">
+          <label class="field"><span>Powtarzanie</span>
+            <select id="repeat" class="inp">
+              <option value="none">Brak</option>
+              <option value="monthly">Co miesiąc</option>
+              <option value="yearly">Co rok</option>
+              <option value="custom">Co X dni</option>
+            </select>
+          </label>
+          <label class="field" id="customDaysWrap" style="display:none"><span>Liczba dni (X)</span><input id="customDays" type="number" min="1" step="1" value="30" class="inp" /></label>
+          <label class="field"><span>Wyprzedzenie przypomnienia</span>
+            <select id="advance" class="inp">
+              <option value="0">W dniu terminu</option>
+              <option value="1">1 dzień wcześniej</option>
+              <option value="2">2 dni wcześniej</option>
+              <option value="3">3 dni wcześniej</option>
+              <option value="7">7 dni wcześniej</option>
+              <option value="14">14 dni wcześniej</option>
+              <option value="30">30 dni wcześniej</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span>Godzina (opcjonalnie)</span><input id="time" type="time" class="inp" /></label>
+          <label class="field"><span>Lokalizacja (opcjonalnie)</span><input id="location" class="inp" placeholder="np. Przychodnia, ul. Długa 5"/></label>
+        </div>
+        <label class="field"><span>Czas trwania</span>
+          <select id="duration" class="inp">
+            <option value="30">30 min</option><option value="45">45 min</option>
+            <option value="60" selected>1 godz.</option><option value="90">1,5 godz.</option><option value="120">2 godz.</option>
+          </select>
+        </label>
+        <label class="field"><span>Notatki</span><textarea id="notes" class="inp" placeholder="Uwagi, link, numer polisy..."></textarea></label>
+        <input type="hidden" id="editId" />
+        <div class="form-actions">
+          <div class="group"><button class="btn accent" type="submit" id="saveBtn">Zapisz</button><button class="btn ghost" type="button" id="resetBtn">Wyczyść</button></div>
+          <span class="muted" id="formHint">Dodajesz nowy termin</span>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div class="chips scroll-x">
+          <button class="chip" data-filter="all">Wszystko</button>
+          <button class="chip" data-filter="week">Tydzień</button>
+          <button class="chip" data-filter="month">Miesiąc</button>
+          <button class="chip" data-filter="overdue">Zaległe</button>
+          <select id="catFilter" class="chip select-chip">
+            <option value="">Wszystkie kategorie</option>
+            <option>Rachunki</option><option>Auto</option><option>Zdrowie</option>
+            <option>Dom</option><option>Praca</option><option>Inne</option>
+          </select>
+        </div>
+        <div class="tools">
+          <input id="search" class="inp" placeholder="Szukaj…" />
+          <div class="group">
+            <button class="btn ok" id="exportIcsBtn">Eksport .ics</button>
+            <button class="btn" id="exportJsonBtn">Eksport .json</button>
+            <input type="file" id="importJsonInput" accept="application/json" hidden />
+            <button class="btn" id="importJsonBtn">Import .json</button>
+          </div>
+        </div>
+      </div>
+      <div class="list-head"><span class="h">Nazwa</span><span class="h">Kategoria</span><span class="h">Powtarzanie</span><span class="h">Termin</span><span class="h"></span></div>
+      <div id="items" class="list"></div>
+      <div class="empty" id="empty">Brak terminów. Dodaj pierwszy powyżej.</div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
